@@ -29,7 +29,7 @@ export default function AddItem({addItem} : AddItemProps) {
       }
 
     return (
-        <div className="my-4 border-b pb-1">
+        <div className="my-4 border-b pb-1 max-w-[30rem] flex gap-2">
             <input 
                 type="text"
                 placeholder="Add TODO..."

@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-
 import './App.css'
-import Item from './components/Item';
-import AddItem from './components/AddItem';
-import EditIcon from './components/EditIcon';
-import DeleteIcon from './components/DeleteIcon';
+import ItemComponent from './components/Item'
+import AddItem from './components/AddItem'
 
 export interface Item {
   title: string
@@ -17,12 +14,29 @@ export default function App() {
     const storedItems = localStorage.getItem('items')
     return storedItems ? JSON.parse(storedItems) : []
   }
+
   const [items, setItems] = useState<Item[]>(getItemsFromLS)
 
   const addItem = (newItem: Item) => {
     setItems((prevItems) => [...prevItems, newItem])
   }
 
+  const changeStatus = (index: number, status: boolean) => {
+    const updatedItems = [...items];
+    updatedItems[index].status = status;
+    console.log("changeStatus: " + status)
+    setItems(updatedItems);
+  }
+
+  const deleteItem = (index: number) => {
+    setItems((prevItems) => prevItems.filter((_, i) => i !== index))
+  }
+
+  const editItem = (index: number, updatedItem: Item) => {
+    setItems((prevItems) => 
+      prevItems.map((item, i) => (i === index ? updatedItem : item))
+    )
+  }
 
   useEffect(() => {
     localStorage.setItem('items', JSON.stringify(items));
@@ -34,11 +48,14 @@ export default function App() {
       <div>
         {
           items.map((item, index) => (
-            <div className='flex flex-row gap-4 items-center'>
-            <Item title={item.title} description={item.description} key={index}></Item>
-            <EditIcon/>
-            <DeleteIcon />
-            </div>
+              <ItemComponent 
+                item={item}
+                key={index} 
+                index={index} 
+                onStatusChange={(status) => changeStatus(index, status)}
+                onDelete={(index) => deleteItem(index)}
+                onEdit={(item: Item) => editItem(index, item)}>
+              </ItemComponent>
           ))
         }
         <AddItem addItem={addItem}/>

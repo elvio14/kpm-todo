@@ -1,6 +1,10 @@
 import { useState } from "react"
 
-export default function EditIcon(){
+interface ChildProps {
+  onClick: (value: boolean) => void
+}
+
+export default function EditIcon({onClick} : ChildProps){
   const [isHovered, setHover] = useState<boolean>(false)
     return (
         <svg
@@ -14,6 +18,7 @@ export default function EditIcon(){
         className="mt-1 cursor-pointer"
         onMouseEnter={() => setHover(true)} 
         onMouseLeave={() => setHover(false)}
+        onClick={() => onClick(true)}
       >
         <desc>Created with Fabric.js 5.3.0</desc>
         <defs />

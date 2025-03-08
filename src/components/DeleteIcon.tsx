@@ -1,7 +1,10 @@
 import { useState } from "react"
 
+interface ChildProps {
+  onClick: (value: boolean) => void
+}
 
-export default function DeleteIcon() {
+export default function DeleteIcon({onClick} : ChildProps) {
     const [isHovered, setHover] = useState<boolean>(false)
     return (
         <svg
@@ -15,6 +18,7 @@ export default function DeleteIcon() {
         className="cursor-pointer mt-1"
         onMouseEnter={() => setHover(true)} 
         onMouseLeave={() => setHover(false)}
+        onClick={() => onClick(true)}
       >
         <desc>Created with Fabric.js 5.3.0</desc>
         <defs />

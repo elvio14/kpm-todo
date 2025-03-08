@@ -2,10 +2,11 @@ import { useState } from "react"
 
 interface ChildProps {
     onToggle: (value: boolean) => void;
+    status: boolean
 }
 
-export default function Checkbox({onToggle} : ChildProps) {
-    const [isActive, setActive] = useState<boolean>(true)
+export default function Checkbox({onToggle, status} : ChildProps) {
+    const [isActive, setActive] = useState<boolean>(status)
     const [isHovered, setHover] = useState<boolean>(false)
 
     const handleClick =  () => {
