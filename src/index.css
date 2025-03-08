@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,6 +13,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --main: rgb(53,237,53);
+
+  --main-grey: rgb(125,125,125);
+  --main-red: rgb(238, 63, 63);
+  --bg: #242424;
 }
 
 a {
@@ -38,7 +46,7 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.2rem 1rem;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -47,7 +55,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #32ff40;
 }
 button:focus,
 button:focus-visible {

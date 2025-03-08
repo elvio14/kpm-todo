@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+
 import './App.css'
+import Item from './components/Item';
+import AddItem from './components/AddItem';
+import EditIcon from './components/EditIcon';
+import DeleteIcon from './components/DeleteIcon';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+export interface Item {
+  title: string
+  description?: string
+  status: boolean
 }
 
-export default App
+export default function App() {
+  const getItemsFromLS = (): Item[] => {
+    const storedItems = localStorage.getItem('items')
+    return storedItems ? JSON.parse(storedItems) : []
+  }
+  const [items, setItems] = useState<Item[]>(getItemsFromLS)
+
+  const addItem = (newItem: Item) => {
+    setItems((prevItems) => [...prevItems, newItem])
+  }
+
+
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(items));
+  }, [items])
+
+  return (
+    <div className='grid grid-rows-[1fr_10fr] h-[90vh] mx-12'>
+      <h2 className='text-4xl font-bold'>TO-DO:</h2>
+      <div>
+        {
+          items.map((item, index) => (
+            <div className='flex flex-row gap-4 items-center'>
+            <Item title={item.title} description={item.description} key={index}></Item>
+            <EditIcon/>
+            <DeleteIcon />
+            </div>
+          ))
+        }
+        <AddItem addItem={addItem}/>
+      </div>
+    </div>
+  )
+}
