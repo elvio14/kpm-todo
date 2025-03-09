@@ -17,7 +17,14 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
     const [isActive, setActive] = useState(item.status)
     const [isHovered, setHover] = useState(false)
     const [isEditing, setEditing] = useState(false)
+    const [warnDelete, setWarnDelete] = useState(false)
     const [curItem, setCurItem] = useState<Item>(item)
+
+    const handleMouseLeave = () => {
+        setTimeout(() => {
+            setHover(false)
+        },  3000)  //Edit/Delete Stays for 3s
+    }
 
     const handleToggle = (val: boolean) => {
         setActive(val)
@@ -28,9 +35,21 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
     }
 
     const handleDelete = () => {
+        setWarnDelete(true)
+        setTimeout(() => {
+            setWarnDelete(false)
+        }, 5000) //5s auto close delete confirmation
+    }
+
+    const confirmDelete = () => {
         if(onDelete){
             onDelete(index)
         }
+        setWarnDelete(false)
+    }
+
+    const cancelDelete = () => {
+        setWarnDelete(false)
     }
 
     const toggleEdit = () => {
@@ -47,42 +66,63 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
     const handleCancel = () => {
         toggleEdit()
     }
+
     return (
-        <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="mb-2">
-        {
-            isEditing ? 
-                <div className="border-b-1 flex mx-2 my-3 gap-2">
-                    <input 
-                        type="text"
-                        defaultValue={item.title} 
-                        className="font-bold" 
-                        onChange={(e) => setCurItem({ ...curItem, title: e.target.value })}></input>
-                    <input
-                        type="text" 
-                        defaultValue={item.description} 
-                        onChange={(e) => setCurItem({ ...curItem, description: e.target.value })}></input>
-                    <OkIcon onClick={handleEdit}/>
-                    <DeleteIcon onClick={handleCancel}/>
+        <div onMouseEnter={() => setHover(true)} onMouseLeave={handleMouseLeave} onTouchStart={() => setHover(true)} onTouchEnd={handleMouseLeave} className="mb-2">
+            {   isEditing ? 
+                <div className="flex mx-2 my-3 gap-2 items-center max-w-[90vw]">
+                    <div className="p-2 border-b-1">
+                        <textarea 
+                            rows={4} 
+                            cols={18}
+                            defaultValue={item.title} 
+                            className="font-bold h-[15vh]" 
+                            onChange={(e) => setCurItem({ ...curItem, title: e.target.value })}></textarea> 
                     </div>
-            :
-                <div className="flex gap-2 items-center">
-                    <Checkbox onToggle={handleToggle} status={item.status}/>
-                    <div className="text-left">
-                        { isActive ?
-                            <><span className="text-lg font-bold">{item.title}</span> | <span className="overflow-hidden">{item.description}</span></>
-                            :
-                            <><span className="text-lg font-bold line-through">{item.title}</span> | <span className="overflow-hidden line-through">{item.description}</span></>
-                        }
+                    <div className="p-2 border-l-2 border-b-1">
+                        <textarea 
+                            rows={4} 
+                            cols={24}
+                            defaultValue={item.description} 
+                            className="h-[15vh]"
+                            onChange={(e) => setCurItem({ ...curItem, description: e.target.value })}></textarea>
                     </div>
-                    {isHovered &&
-                        <>
-                        <EditIcon onClick={toggleEdit}/>
-                        <DeleteIcon onClick={handleDelete}/>
-                        </>
-                    }
+                    <div className="flex gap-2 p-2">
+                        <OkIcon onClick={handleEdit}/>
+                        <DeleteIcon onClick={handleCancel}/>
+                    </div>
 
                 </div>
-        }
+            : //------------------------------------------------------------------------------------------------------
+                <div className="grid grid-cols-[20px_auto] gap-2 items-start">
+                    <div className="mt-1">
+                        <Checkbox onToggle={handleToggle} status={item.status}/>
+                    </div>
+                    <div className="flex">
+                        <div className="flex gap-2 max-w-4xl">
+                            { isActive ?
+                                <>
+                                    <div><span className="text-lg font-bold">{item.title}</span></div>
+                                    <div className="border-l-2 pl-2"><span className="text-lg">{item.description}</span></div></>
+                                :
+                                <><span className="text-lg font-bold line-through">{item.title}</span> | <span className="overflow-hidden line-through">{item.description}</span></>
+                            }
+                        </div>
+                        {isHovered &&
+                            <div className="flex gap-2 ml-2 mt-1">
+                                <EditIcon onClick={toggleEdit}/>
+                                { warnDelete ?
+                                    <><span>Are you sure to delete?</span> 
+                                        <a className="text-[var(--main)] cursor-pointer" onClick={cancelDelete}>No.</a> 
+                                        <a className="text-[var(--main-red)] cursor-pointer" onClick={confirmDelete}>Delete.</a></>
+                                    :
+                                    <DeleteIcon onClick={handleDelete}/>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     )
 }

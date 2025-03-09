@@ -24,7 +24,6 @@ export default function App() {
   const changeStatus = (index: number, status: boolean) => {
     const updatedItems = [...items];
     updatedItems[index].status = status;
-    console.log("changeStatus: " + status)
     setItems(updatedItems);
   }
 
@@ -40,7 +39,7 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem('items', JSON.stringify(items));
-  }, [items])
+  }, [items]) //UPDATES LOCAL STORAGE EVERYTIME ITEMS CHANGES
 
   return (
     <div className='grid grid-rows-[1fr_10fr] h-[90vh] mx-12'>
