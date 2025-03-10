@@ -16,6 +16,7 @@ export default function OkIcon({onClick} : ChildProps) {
         onMouseEnter={() => setHover(true)} 
         onMouseLeave={() => setHover(false)}
         onClick={() => onClick(true)}
+        data-testid="ok-icon"
       >
         <circle cx="40" cy="40" r="40" fill={isHovered ? 'var(--main)' : 'var(--main-grey)'} />
         <path

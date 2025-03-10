@@ -36,6 +36,7 @@ export default function AddItem({addItem} : AddItemProps) {
                 value={newItem.title}
                 onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
                 className="font-bold"
+                aria-label="add-input-title"
                 style={{
                     border: noTitle ? "solid 1px red" : "none"
                 }}
@@ -45,7 +46,8 @@ export default function AddItem({addItem} : AddItemProps) {
                 type="text" 
                 placeholder="Notes..."
                 value={newItem.description}
-                onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}>  
+                onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                aria-label="add-input-desc">  
             </input>
             <button onClick={handleAddClick}>Add</button>
         </div>

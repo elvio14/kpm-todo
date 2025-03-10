@@ -20,10 +20,14 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
     const [warnDelete, setWarnDelete] = useState(false)
     const [curItem, setCurItem] = useState<Item>(item)
 
+    const handleMouseEnter = () => {
+        setHover(true)
+        console.log("Hovering")
+    }
     const handleMouseLeave = () => {
         setTimeout(() => {
             setHover(false)
-        },  3000)  //Edit/Delete Stays for 3s
+        },  5000)  //Edit/Delete Stays for 5s
     }
 
     const handleToggle = (val: boolean) => {
@@ -59,6 +63,7 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
     const handleEdit = () => {
         if(onEdit){
             onEdit(curItem)
+            console.log("Edited to:" + curItem)
         }
         toggleEdit()
     }
@@ -68,14 +73,20 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
     }
 
     return (
-        <div onMouseEnter={() => setHover(true)} onMouseLeave={handleMouseLeave} onTouchStart={() => setHover(true)} onTouchEnd={handleMouseLeave} className="mb-2">
+        <div onMouseEnter={handleMouseEnter} 
+                onMouseLeave={handleMouseLeave} 
+                onTouchStart={handleMouseEnter} 
+                onTouchEnd={handleMouseLeave} 
+                className="mb-2"
+                data-testid="item-div">
             {   isEditing ? 
                 <div className="flex mx-2 my-3 gap-2 items-center max-w-[90vw]">
                     <div className="p-2 border-b-1">
                         <textarea 
                             rows={4} 
                             cols={18}
-                            defaultValue={item.title} 
+                            value={curItem.title} 
+                            aria-label="ta-title"
                             className="font-bold h-[15vh]" 
                             onChange={(e) => setCurItem({ ...curItem, title: e.target.value })}></textarea> 
                     </div>
@@ -83,17 +94,20 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
                         <textarea 
                             rows={4} 
                             cols={24}
-                            defaultValue={item.description} 
+                            value={curItem.description} 
+                            aria-label="ta-desc"
                             className="h-[15vh]"
                             onChange={(e) => setCurItem({ ...curItem, description: e.target.value })}></textarea>
                     </div>
                     <div className="flex gap-2 p-2">
-                        <OkIcon onClick={handleEdit}/>
-                        <DeleteIcon onClick={handleCancel}/>
+                        <OkIcon onClick={handleEdit} />
+                        <DeleteIcon onClick={handleCancel} />
                     </div>
 
                 </div>
+                //EDITING
             : //------------------------------------------------------------------------------------------------------
+                //DEFAULT
                 <div className="grid grid-cols-[20px_auto] gap-2 items-start">
                     <div className="mt-1">
                         <Checkbox onToggle={handleToggle} status={item.status}/>
@@ -102,21 +116,24 @@ export default function ItemComponent({item, index, onStatusChange, onDelete, on
                         <div className="flex gap-2 max-w-4xl">
                             { isActive ?
                                 <>
-                                    <div><span className="text-lg font-bold">{item.title}</span></div>
-                                    <div className="border-l-2 pl-2"><span className="text-lg">{item.description}</span></div></>
+                                    <div data-testid="title"><span className="text-lg font-bold">{item.title}</span></div>
+                                    <div data-testid="desc" className="border-l-2 pl-2"><span className="text-lg">{item.description}</span></div></>
                                 :
-                                <><span className="text-lg font-bold line-through">{item.title}</span> | <span className="overflow-hidden line-through">{item.description}</span></>
+                                <>
+                                    <div data-testid="title"><span className="text-md font-bold line-through">{item.title}</span></div>
+                                    <div data-testid="desc" className="border-l-2 pl-2"><span className="text-md line-through">{item.description}</span></div>
+                                </>
                             }
                         </div>
                         {isHovered &&
-                            <div className="flex gap-2 ml-2 mt-1">
+                            <div className="flex gap-2 ml-2 mt-1" data-testid="edit-div">
                                 <EditIcon onClick={toggleEdit}/>
                                 { warnDelete ?
                                     <><span>Are you sure to delete?</span> 
                                         <a className="text-[var(--main)] cursor-pointer" onClick={cancelDelete}>No.</a> 
                                         <a className="text-[var(--main-red)] cursor-pointer" onClick={confirmDelete}>Delete.</a></>
                                     :
-                                    <DeleteIcon onClick={handleDelete}/>
+                                    <DeleteIcon onClick={handleDelete} data-testid="delete-icon"/>
                                 }
                             </div>
                         }

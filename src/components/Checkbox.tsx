@@ -27,6 +27,7 @@ export default function Checkbox({onToggle, status} : ChildProps) {
             onMouseEnter={() => setHover(true)} 
             onMouseLeave={() => setHover(false)}
             onClick={handleClick}
+            data-testid="checkbox"
             className="cursor-pointer"
         >
             <desc>Created with Fabric.js 5.3.0</desc>

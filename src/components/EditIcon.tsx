@@ -19,6 +19,7 @@ export default function EditIcon({onClick} : ChildProps){
         onMouseEnter={() => setHover(true)} 
         onMouseLeave={() => setHover(false)}
         onClick={() => onClick(true)}
+        data-testid="edit-icon"
       >
         <desc>Created with Fabric.js 5.3.0</desc>
         <defs />
