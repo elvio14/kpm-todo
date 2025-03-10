@@ -37,6 +37,11 @@ export default function App() {
     )
   }
 
+  const clearData = () => {
+    localStorage.clear()
+    setItems([])
+  }
+
   useEffect(() => {
     localStorage.setItem('items', JSON.stringify(items));
   }, [items]) //UPDATES LOCAL STORAGE EVERYTIME ITEMS CHANGES
@@ -59,6 +64,7 @@ export default function App() {
         }
         <AddItem addItem={addItem}/>
       </div>
+      <div className='fixed bottom-4 left-4 cursor-pointer hover:text-[var(--main-red)]'><a onClick={clearData}>Clear All Data</a></div>
     </div>
   )
 }
