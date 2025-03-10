@@ -1,4 +1,5 @@
 import { it, expect, describe, test, afterEach, beforeEach } from 'vitest'
+import "@testing-library/jest-dom/vitest"
 import { Item } from '../src/App'
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react'
 import App from '../src/App'
